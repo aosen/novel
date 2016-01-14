@@ -11,6 +11,8 @@ import (
 
 	"github.com/aosen/utils"
 	"github.com/astaxie/beego/orm"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func init() {
@@ -27,7 +29,7 @@ func init() {
 	// 参数1        数据库的别名，用来在ORM中切换数据库使用
 	// 参数2        driverName
 	// 参数3        对应的链接字符串
-	orm.RegisterDataBase("default", "mysql", DBINFO)
+	orm.RegisterDataBase("default", "mysql", dbinfo)
 	//根据数据库的别名，设置数据库的最大空闲连接
 	orm.SetMaxIdleConns("default", 30)
 	//根据数据库的别名，设置数据库的最大数据库连接 (go >= 1.2)
