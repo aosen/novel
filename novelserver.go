@@ -15,6 +15,8 @@ import (
 
 	"github.com/aosen/utils"
 	"github.com/gorilla/mux"
+
+	_ "novel/models"
 )
 
 func loadconf(path string) (settings map[string]string) {
