@@ -16,13 +16,13 @@ type Application struct {
 //小说简介信息
 type Novel struct {
 	Id           int
-	Title        string    `orm:"size(200);unique"`
-	First        int       `orm:"index"`
-	Second       int       `orm:"index"`
+	Title        string    `orm:"size(200)"`
+	Firstid      int       `orm:"index"`
+	Secondid     int       `orm:"index"`
 	Author       string    `orm:"size(50);index"`
 	Introduction string    `orm:"type(text)"`
-	Picture      string    `orm:"size(300)"`
-	Novelsource  string    `orm:"size(300)"`
+	Picture      string    `orm:"size(200)"`
+	Novelsource  string    `orm:"size(200);unique"`
 	Novelpv      int       `orm:"default(0)"`
 	Createtime   time.Time `orm:"type(date)"`
 }
