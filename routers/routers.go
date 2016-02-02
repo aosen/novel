@@ -10,12 +10,12 @@ import (
 	"net/http"
 	"novel/controllers"
 
-	"github.com/aosen/utils"
+	"github.com/aosen/goutils"
 	"github.com/gorilla/mux"
 )
 
-func Register(web *utils.Web, r *mux.Router) {
+func Register(web *goutils.Web, r *mux.Router) {
 	// Bind to a port and pass our router in
-	//r.HandleFunc("/cut/", g.Go(&controllers.CutHandler{}))
+	r.HandleFunc("/taglist/", web.Go(&controllers.TaglistHandler{}))
 	r.NotFoundHandler = http.HandlerFunc(web.Go(controllers.NewNotFoundHandler()))
 }

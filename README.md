@@ -1,1 +1,202 @@
-# novel
+#WEB API
+1. 基于json通信
+2. 基于restfull
+
+##web api 签名验证
+###签名方法
+调用 API 时需要对请求参数(除sign)进行签名验证，服务器会对该请求参数进行验证是否合法的。方法如下：
+根据参数名称（除签名和图片文件）将所有请求参数按照字母先后顺序排序:key + value .... key + value
+例如：将foo=1,bar=2,baz=3 排序为bar=2,baz=3,foo=1，参数名和参数值链接后，得到拼装字符串bar2baz3foo1
+
+###系统暂时只支持MD5加密方式：
+1. md5：将 appsecret 拼接到参数字符串头、尾进行md5加密，格式是：md5(appsecretkey1value1key2value2...appsecret)
+2. 我们需要的是32位的字符串，字母全部小写（如果是md5出来的是大写字母，请转为小写），图片文件不用加入签名中测试。
+3. 以下所有api均需要以下参数： appid， sign_method, sign, timestamp
+
+##状态码
+<table>
+<tbody>
+<tr><td><em>err</em></td><td><em>errmsg</em></td><td><em>描述</em></td></tr>
+<tr><td>200</td><td>成功</td><td></td></tr>
+<tr><td>401</td><td>参数不正确</td><td></td></tr>
+<tr><td>402</td><td>验证失败</td><td></td></tr>
+<tr><td>403</td><td>缺少sign_method</td><td></td></tr>
+<tr><td>404</td><td>缺少sign参数</td><td></td></tr>
+<tr><td>405</td><td>非法用户</td><td></td></tr>
+<tr><td>406</td><td>不存在</td><td></td></tr>
+<tr><td>500</td><td>未知错误</td><td></td></tr>
+<tr><td>601</td><td>用户名已经存在</td><td></td></tr>
+</tbody>
+</table>
+
+##Json返回格式
+```
+{
+"code" : "状态码",
+"desc": "描述",
+"result": "返回的数据结果"
+}
+```
+
+##文本搜索引擎
+###参数列表
+<table>
+<tbody>
+<tr><td><em>参数名</em></td><td><em>描述</em></td><td><em>默认值</em></td></tr>
+<tr><td>appid</td><td>应用ID</td><td>您自己的appid</td></tr>
+<tr><td>sign_method</td><td>签名方式</td><td>目前支持MD5</td></tr>
+<tr><td>sign</td><td>签名</td><td>MD5加密后结果</td></tr>
+<tr><td>text</td><td>搜索内容</td><td>搜索内容, 最大长度:65535</td></tr>
+<tr><td>docid</td><td>文档id</td><td>文档id, 用于搜索时返回</td></tr>
+<tr><td>docids</td><td>文档id范围</td><td>如: 1-1000, 搜索引擎会在id范围内进行搜索, <em>注</em>: docids的最大取值范围为1 ~ 999999999999</td></tr>
+<tr><td>tags</td><td>标签</td><td>如: 搜索-引擎 被打上此标签的搜索内容, 最大长度:65535</td></tr>
+<tr><td>timeout</td><td>超时时间</td><td>如果搜索超时,也会有部分内容返回</td></tr>
+</tbody>
+</table>
+###获取搜索结果接口
+####接口地址
+    /search/
+####参数
+    text / tags / docids (text与tags至少有一项不为空,docids为必填项) / timeout (可选)
+####返回字段
+    tokens (关键词列表) / dos (文档列表,已经排序好的) / timeout (是否超时,如果超时也会返回部分结果)
+###上传需要被搜索的文档接口
+####接口地址
+    /index/
+####参数
+    text / docid / tags
+####返回字段
+    如果成功返回空 / 失败返回错误信息
+
+##中文分词
+###参数列表
+<table>
+<tbody>
+<tr><td><em>参数名</em></td><td><em>描述</em></td><td><em>默认值</em></td></tr>
+<tr><td>appid</td><td>应用ID</td><td>您自己的appid</td></tr>
+<tr><td>sign_method</td><td>签名方式</td><td>目前支持MD5</td></tr>
+<tr><td>sign</td><td>签名</td><td>MD5加密后结果</td></tr>
+<tr><td>text</td><td>文本</td><td>要被分词的文本</td></tr>
+<tr><td>mode</td><td>模式</td><td>0 普通模式 1 搜索引擎模式</td></tr>
+</tbody>
+</table>
+###获取分词结果接口
+####接口地址
+    /cut/
+####参数
+text / mode
+####返回字段
+text（分词）/ pos（词性）
+
+##小说WEB API
+###参数列表
+<table>
+<tbody>
+<tr><td><em>参数名</em></td><td><em>描述</em></td><td><em>默认值</em></td></tr>
+<tr><td>appid</td><td>应用ID</td><td>您自己的appid</td></tr>
+<tr><td>sign_method</td><td>签名方式</td><td>目前支持MD5</td></tr>
+<tr><td>sign</td><td>签名</td><td>MD5加密后结果</td></tr>
+<tr><td>first</td><td>一级分类 1：男 0：女</td><td>无</td></tr>
+<tr><td>second</td><td>二级分类，按小说内容</td><td>无</td></tr>
+<tr><td>novelid</td><td>小说ID</td><td>无</td></tr>
+<tr><td>chapterid</td><td>章节ID</td><td>无</td></tr>
+<tr><td>wd</td><td>搜索关键词</td><td>无</td></tr>
+</tbody>
+</table>
+
+###获取小说分类接口
+####请求方法
+    get
+####接口地址
+    /taglist/
+####参数
+    无
+####返回字段 
+    firstid / secondid / firstname / secondname
+
+###获取某分类下的小说列表接口
+####接口地址 
+    /novellist/ 
+####参数
+    first / second
+####返回字段
+    title， novelid, author, picture, introduction
+
+###获取小说简介接口
+####接口地址 
+    /novelintroduction/
+####参数说明
+    novelid
+####返回字段 
+    title, novelid, author, picture, introduction, chapternum
+
+###获取小说的章节列表接口
+####接口地址 
+    /novelchapter/
+####参数说明
+    novelid
+####返回字段
+    title(小说标题), subtitle(小说章节标题)， chapterid(章节id), novelid , author, picture, introduction
+
+###获取章节内容接口
+####接口地址 
+    /novelcontent/
+####参数
+    chapterid
+####返回字段
+    title(小说标题), subtitle(小说章节标题), novelid(小说ID), content(内容), chapterid, prev(上一章节chapterid), next(下一章节chapterid)
+
+###小说点击事件上传
+####接口地址
+    /novelclick/
+####接口描述
+    上传用户小说点击数，用来记录小说总阅读数
+####参数
+    novelid
+####返回字段
+    novelid， novelpv(当前novelid的对应的小说阅读量)
+
+###获取小说排名
+####接口地址
+    /novelrank/
+####接口描述
+    获取小说热度排行榜
+####参数
+    page / limit
+####返回字段
+    novelid / title / novelpv / picture / author / first / second / rank(排名)
+    
+###小说搜索
+####接口地址
+    /novelsearch/
+####接口描述
+    获取小说搜索结果
+####参数
+    wd
+####返回字段
+    id(即novelid) / title / novelpv / picture(在地址前加 http://api.9miao.com/static/spider/) / author / first / second / introduction
+    
+###小说下载 
+####接口地址
+    /noveldownload/
+####接口描述
+    下载小说
+####参数
+    novelid
+####返回字段
+    novelsrc (小说的下载地址)
+####小说文件格式
+    Json格式, 格式如下:
+    {
+        "title" : "XXXXXXXXXXX", //小说标题
+        "chaptercontent": [
+            {
+                "chapterid": 123,
+                "subtitle": "XXXXXXX",
+                "content": "XXXXXXXXXXXXXX",
+            },           
+        ]
+    }
+    
+##开发计划
+* 2016-02-02 taglist接口 ***done***

@@ -3,9 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 
-	"github.com/aosen/utils"
+	"github.com/aosen/goutils"
 )
 
 /*返回的JSON数据*/
@@ -16,12 +17,13 @@ type Response struct {
 }
 
 var ERR = map[int]string{
-	200: "success",
+	200: "Success",
 	401: "Invalid argument",
+	500: "Unknown Error",
 }
 
 type BaseHandler struct {
-	utils.WebHandler
+	goutils.WebHandler
 }
 
 func (self *BaseHandler) JsonResponse(w http.ResponseWriter, v interface{}, code int) {
@@ -32,4 +34,13 @@ func (self *BaseHandler) JsonResponse(w http.ResponseWriter, v interface{}, code
 	})
 	//w.Header().Set("Content-Type", "application/json")
 	io.WriteString(w, string(resp))
+}
+
+func (self *BaseHandler) Prepare(w http.ResponseWriter, r *http.Request, web *goutils.Web) {
+	r.ParseForm()
+	var appid string
+	if len(r.Form["appid"]) > 0 {
+		appid = r.Form["appid"][0]
+	}
+	log.Println(appid)
 }
