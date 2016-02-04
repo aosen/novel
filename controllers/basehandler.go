@@ -20,10 +20,6 @@ var CodeDic = map[int]string{
 	200: "Success",
 	401: "Invalid Argument",
 	402: "Authentication Failed",
-	403: "No sign_method",
-	404: "No sign",
-	405: "Illegal User",
-	406: "No Exist",
 	500: "Unknown Error",
 }
 
