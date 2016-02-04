@@ -67,6 +67,7 @@ type Novel struct {
 	Picture      string    `orm:"size(200)"`
 	Novelsource  string    `orm:"size(200);unique"`
 	Novelpv      int       `orm:"default(0)"`
+	Novelcollect int       `orm:"default(0)"`
 	Createtime   time.Time `orm:"type(date)"`
 }
 
@@ -151,4 +152,18 @@ func init() {
 }
 
 type BaseModel struct {
+}
+
+func NewBaseModel() *BaseModel {
+	return &BaseModel{}
+}
+
+func (self *BaseModel) GetAllNovel() ([]*Novel, error) {
+	var novels []*Novel
+	o := orm.NewOrm()
+	//获取小说列表
+	if _, err := o.QueryTable("novel").All(&novels, "Id", "Firstid", "Secondid", "Novelpv", "Novelcollect"); err != nil {
+		return nil, err
+	}
+	return novels, nil
 }

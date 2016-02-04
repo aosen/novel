@@ -86,8 +86,11 @@ func (self *BaseHandler) Prepare(w http.ResponseWriter, r *http.Request, web *go
 	//生成参数字典
 	appid, _ := web.Settings["APPID"]
 	appsecret, _ := web.Settings["APPSECRET"]
-	if !self.checkSign(r.Form, appid, appsecret) {
-		self.JsonResponse(w, "", 402)
-		self.StopRun()
+	debug, _ := web.Settings["DEBUG"]
+	if debug == "False" {
+		if !self.checkSign(r.Form, appid, appsecret) {
+			self.JsonResponse(w, "", 402)
+			self.StopRun()
+		}
 	}
 }
