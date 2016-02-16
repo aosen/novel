@@ -42,6 +42,8 @@ func main() {
 	// Routes consist of a path and a handler function.
 	r := mux.NewRouter()
 	routers.Register(web, r)
+	static, _ := settings["STATIC"]
+	http.Handle("/"+static+"/", http.StripPrefix("/"+static+"/", http.FileServer(http.Dir("./"+static))))
 	http.Handle("/", r)
 	err := http.ListenAndServe(fmt.Sprintf("%s:%s", host, port), nil)
 	checkError(err)
