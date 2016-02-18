@@ -52,3 +52,5 @@ func (self KVL) Append(target KVL, kv map[string]interface{}) KVL {
 func MapDicSortToMap(dict KVL) {
 	sort.Sort(dict)
 }
+
+//根据novel结构体进行排序

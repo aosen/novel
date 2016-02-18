@@ -8,6 +8,7 @@ package models
 
 import (
 	"log"
+	"sort"
 	"time"
 
 	"github.com/aosen/goutils"
@@ -69,6 +70,44 @@ type Novel struct {
 	Novelpv      int       `orm:"default(0)"`
 	Novelcollect int       `orm:"default(0)"`
 	Createtime   time.Time `orm:"type(date)"`
+}
+
+//根据novel结构体列表中的novelpv进行排序
+type NovelsPv []*Novel
+
+func (self NovelsPv) Len() int {
+	return len(self)
+}
+
+func (self NovelsPv) Less(i, j int) bool {
+	return self[i].Novelpv < self[j].Novelpv
+}
+
+func (self NovelsPv) Swap(i, j int) {
+	self[i], self[j] = self[j], self[i]
+}
+
+func NovelPvSort(nsp NovelsPv) {
+	sort.Sort(nsp)
+}
+
+//根据novel结构体列表中的novelcollect进行排序
+type NovelsCollect []*Novel
+
+func (self NovelsCollect) Len() int {
+	return len(self)
+}
+
+func (self NovelsCollect) Less(i, j int) bool {
+	return self[i].Novelcollect < self[j].Novelcollect
+}
+
+func (self NovelsCollect) Swap(i, j int) {
+	self[i], self[j] = self[j], self[i]
+}
+
+func NovelCollectSort(nsc NovelsCollect) {
+	sort.Sort(nsc)
 }
 
 //小说内容表
@@ -162,7 +201,7 @@ func (self *BaseModel) GetAllNovel() ([]*Novel, error) {
 	var novels []*Novel
 	o := orm.NewOrm()
 	//获取小说列表
-	if _, err := o.QueryTable("novel").All(&novels, "Id", "Firstid", "Secondid", "Novelpv", "Novelcollect"); err != nil {
+	if _, err := o.QueryTable("novel").Limit(-1).All(&novels, "Id", "Firstid", "Secondid", "Novelpv", "Novelcollect"); err != nil {
 		return nil, err
 	}
 	return novels, nil
