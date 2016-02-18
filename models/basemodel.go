@@ -80,7 +80,7 @@ func (self NovelsPv) Len() int {
 }
 
 func (self NovelsPv) Less(i, j int) bool {
-	return self[i].Novelpv < self[j].Novelpv
+	return self[i].Novelpv > self[j].Novelpv
 }
 
 func (self NovelsPv) Swap(i, j int) {
@@ -99,7 +99,7 @@ func (self NovelsCollect) Len() int {
 }
 
 func (self NovelsCollect) Less(i, j int) bool {
-	return self[i].Novelcollect < self[j].Novelcollect
+	return self[i].Novelcollect > self[j].Novelcollect
 }
 
 func (self NovelsCollect) Swap(i, j int) {
