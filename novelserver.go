@@ -16,6 +16,10 @@ import (
 	"novel/utils"
 
 	"github.com/aosen/goutils"
+	"github.com/aosen/search"
+	"github.com/aosen/search/indexer"
+	"github.com/aosen/search/ranker"
+	"github.com/aosen/search/segmenter"
 	"github.com/gorilla/mux"
 
 	_ "novel/models"
@@ -27,6 +31,38 @@ func loadconf(path string) (settings map[string]string) {
 	return config.GlobalContent()
 }
 
+//初始化搜索引擎
+func initsearchengine(settings map[string]string) *search.Engine {
+	dict, _ := settings["DICT"]
+	stop, _ := settings["STOP"]
+	//初始化分词器
+	seg := segmenter.InitChinaCut(dict)
+	//生成一个搜索引擎
+	searcher := search.NewSearchEngine()
+	searcher.Init(search.EngineInitOptions{
+		//分词器采用引擎自带的分词器
+		Segmenter:            seg,
+		StopTokenFile:        stop,
+		UsePersistentStorage: false,
+		IndexerInitOptions: &search.IndexerInitOptions{
+			IndexType: search.LocationsIndex,
+			BM25Parameters: &search.BM25Parameters{
+				K1: 2.0,
+				B:  0.75,
+			},
+		},
+		//索引器接口实现，采用自带的wukong索引器
+		CreateIndexer: func() search.SearchIndexer {
+			return indexer.NewWuKongIndexer()
+		},
+		//排序器生成方法
+		CreateRanker: func() search.SearchRanker {
+			return ranker.NewWuKongRanker()
+		},
+	})
+	return searcher
+}
+
 func main() {
 	//配置文件信息
 	settings := loadconf("conf/app.conf")
@@ -35,9 +71,11 @@ func main() {
 	}
 	//启动系统任务
 	go tasks.SysTask(settings)
+	//初始化搜索引擎
+	searcher := initsearchengine(settings)
 	port, _ := settings["PORT"]
 	host, _ := settings["HOST"]
-	web := goutils.NewWeb(settings)
+	web := utils.NewWeb(settings, searcher)
 	log.Printf("server run on %s:%s", host, port)
 	// Routes consist of a path and a handler function.
 	r := mux.NewRouter()

@@ -15,16 +15,15 @@ package controllers
 import (
 	"net/http"
 	"novel/models"
+	"novel/utils"
 	"strconv"
-
-	"github.com/aosen/goutils"
 )
 
 type NovelCollectHandler struct {
 	BaseHandler
 }
 
-func (self *NovelCollectHandler) Put(w http.ResponseWriter, r *http.Request, web *goutils.Web) {
+func (self *NovelCollectHandler) Put(w http.ResponseWriter, r *http.Request, web *utils.Web) {
 	var novelid int
 	var err error
 	if nid := self.GetParam("novelid"); nid != "" {

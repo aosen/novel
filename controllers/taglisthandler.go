@@ -13,8 +13,7 @@ package controllers
 import (
 	"net/http"
 	"novel/models"
-
-	"github.com/aosen/goutils"
+	"novel/utils"
 )
 
 //请求获取分类列表
@@ -22,7 +21,7 @@ type TaglistHandler struct {
 	BaseHandler
 }
 
-func (self *TaglistHandler) Get(w http.ResponseWriter, r *http.Request, web *goutils.Web) {
+func (self *TaglistHandler) Get(w http.ResponseWriter, r *http.Request, web *utils.Web) {
 	tagobj := models.NewTagListModel()
 	if taglist, err := tagobj.GetTagList(); err != nil {
 		self.JsonResponse(w, "", 500)

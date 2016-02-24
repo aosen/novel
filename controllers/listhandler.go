@@ -14,9 +14,8 @@ package controllers
 import (
 	"net/http"
 	"novel/models"
+	"novel/utils"
 	"strconv"
-
-	"github.com/aosen/goutils"
 )
 
 //根据一级分类id 二级分类id获取小说列表
@@ -24,7 +23,7 @@ type NovelListHandler struct {
 	BaseHandler
 }
 
-func (self *NovelListHandler) Get(w http.ResponseWriter, r *http.Request, web *goutils.Web) {
+func (self *NovelListHandler) Get(w http.ResponseWriter, r *http.Request, web *utils.Web) {
 	var (
 		firstid  int
 		secondid int

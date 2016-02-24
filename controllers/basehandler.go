@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"novel/utils"
 
 	"github.com/aosen/goutils"
 )
@@ -24,7 +25,7 @@ var CodeDic = map[int]string{
 }
 
 type BaseHandler struct {
-	goutils.WebHandler
+	utils.WebHandler
 	kwargs url.Values
 }
 
@@ -80,7 +81,7 @@ func (self *BaseHandler) GetParam(key string) (value string) {
 	return
 }
 
-func (self *BaseHandler) Prepare(w http.ResponseWriter, r *http.Request, web *goutils.Web) {
+func (self *BaseHandler) Prepare(w http.ResponseWriter, r *http.Request, web *utils.Web) {
 	r.ParseForm()
 	self.kwargs = r.Form
 	//生成参数字典

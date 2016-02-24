@@ -9,12 +9,12 @@ package routers
 import (
 	"net/http"
 	"novel/controllers"
+	"novel/utils"
 
-	"github.com/aosen/goutils"
 	"github.com/gorilla/mux"
 )
 
-func Register(web *goutils.Web, r *mux.Router) {
+func Register(web *utils.Web, r *mux.Router) {
 	// Bind to a port and pass our router in
 	r.HandleFunc("/taglist/", web.Go(&controllers.TaglistHandler{}))
 	r.HandleFunc("/novellist/", web.Go(&controllers.NovelListHandler{}))

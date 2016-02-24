@@ -18,9 +18,8 @@ package controllers
 import (
 	"net/http"
 	"novel/models"
+	"novel/utils"
 	"strconv"
-
-	"github.com/aosen/goutils"
 )
 
 //获取小说简介
@@ -28,7 +27,7 @@ type NovelIntroductionHandler struct {
 	BaseHandler
 }
 
-func (self *NovelIntroductionHandler) Get(w http.ResponseWriter, r *http.Request, web *goutils.Web) {
+func (self *NovelIntroductionHandler) Get(w http.ResponseWriter, r *http.Request, web *utils.Web) {
 	var (
 		novelid int
 		err     error

@@ -11,16 +11,15 @@ package controllers
 import (
 	"net/http"
 	"novel/models"
+	"novel/utils"
 	"strconv"
-
-	"github.com/aosen/goutils"
 )
 
 type NovelContentHandler struct {
 	BaseHandler
 }
 
-func (self *NovelContentHandler) Get(w http.ResponseWriter, r *http.Request, web *goutils.Web) {
+func (self *NovelContentHandler) Get(w http.ResponseWriter, r *http.Request, web *utils.Web) {
 	var (
 		chapterid int
 		err       error
