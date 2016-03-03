@@ -7,6 +7,7 @@ Desc: models的基类，所有其他model都继承此类, 使用beego提供的or
 package models
 
 import (
+	"errors"
 	"log"
 	"sort"
 	"time"
@@ -205,4 +206,41 @@ func (self *BaseModel) GetAllNovel() ([]*Novel, error) {
 		return nil, err
 	}
 	return novels, nil
+}
+
+func (self *BaseModel) GetAllNovelForIndex() ([]*Novel, error) {
+	var novels []*Novel
+	o := orm.NewOrm()
+	//获取小说列表
+	if _, err := o.QueryTable("novel").Limit(-1).All(&novels, "Id", "Title", "Author"); err != nil {
+		return nil, err
+	}
+	return novels, nil
+}
+
+func (self *BaseModel) GetNovels(novelids []int) ([]map[string]interface{}, error) {
+	o := orm.NewOrm()
+	var novels []*Novel
+	//获取小说简介
+	//如果小说列表为空，则直接返回err
+	if len(novelids) == 0 {
+		return nil, errors.New("novelids empty")
+	}
+	if _, err := o.QueryTable("novel").Filter("id__in", novelids).All(&novels, "Id", "Title", "Novelpv", "Author", "Picture", "Firstid", "Secondid", "Introduction"); err != nil {
+		return nil, err
+	} else {
+		ret := []map[string]interface{}{}
+		for _, novel := range novels {
+			ret = append(ret, map[string]interface{}{
+				"title":        novel.Title,
+				"novelid":      novel.Id,
+				"novelpv":      novel.Novelpv,
+				"author":       novel.Author,
+				"picture":      novel.Picture,
+				"first":        novel.Firstid,
+				"second":       novel.Secondid,
+				"introduction": novel.Introduction})
+		}
+		return ret, nil
+	}
 }

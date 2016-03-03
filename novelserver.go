@@ -73,6 +73,9 @@ func main() {
 	go tasks.SysTask(settings)
 	//初始化搜索引擎
 	searcher := initsearchengine(settings)
+	//生成一个索引任务对象
+	//加载索引到内存
+	go tasks.NewIndexTask(searcher).Index()
 	port, _ := settings["PORT"]
 	host, _ := settings["HOST"]
 	web := utils.NewWeb(settings, searcher)
