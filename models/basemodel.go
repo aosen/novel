@@ -158,11 +158,16 @@ type Clickrank struct {
 }
 
 //小说推荐列表 json格式的
-type Recommendlist struct {
-	Id            int
-	Recommendlist string    `orm:"type(text)"`
-	Updatetime    time.Time `orm:"type(date)"`
-	Createtime    time.Time `orm:"type(date)"`
+type Recommend struct {
+	Id      int
+	Tagid   int
+	Novelid int
+	Top     int
+}
+
+var RecommendMap map[int]string = map[int]string{
+	1: "编辑推荐",
+	2: "百万粉丝追读",
 }
 
 func init() {
@@ -187,7 +192,7 @@ func init() {
 		new(Content),
 		new(Collectrank),
 		new(Clickrank),
-		new(Recommendlist),
+		new(Recommend),
 	)
 }
 
@@ -218,7 +223,7 @@ func (self *BaseModel) GetAllNovelForIndex() ([]*Novel, error) {
 	return novels, nil
 }
 
-func (self *BaseModel) GetNovels(novelids []int) ([]map[string]interface{}, error) {
+func (self *BaseModel) GetNovels(novelids []int, picpath string) ([]map[string]interface{}, error) {
 	o := orm.NewOrm()
 	var novels []*Novel
 	//获取小说简介
@@ -236,11 +241,44 @@ func (self *BaseModel) GetNovels(novelids []int) ([]map[string]interface{}, erro
 				"novelid":      novel.Id,
 				"novelpv":      novel.Novelpv,
 				"author":       novel.Author,
-				"picture":      novel.Picture,
+				"picture":      picpath + novel.Picture,
 				"first":        novel.Firstid,
 				"second":       novel.Secondid,
 				"introduction": novel.Introduction})
 		}
 		return ret, nil
 	}
+}
+
+//根据novelid获取小说简介
+func (self *BaseModel) GetNovel(novelid int) (map[string]interface{}, error) {
+	o := orm.NewOrm()
+	novel := Novel{Id: novelid}
+	//获取小说简介
+	err := o.Read(&novel)
+	if err == orm.ErrNoRows {
+		return nil, errors.New("查询不到")
+	} else if err == orm.ErrMissPK {
+		return nil, errors.New("找不到主键")
+	} else {
+		return map[string]interface{}{
+			"title":        novel.Title,
+			"novelid":      novel.Id,
+			"second":       novel.Secondid,
+			"author":       novel.Author,
+			"introduction": novel.Introduction,
+			"picture":      novel.Picture,
+		}, nil
+	}
+}
+
+//根据secondid获取小说二级分类名称
+func (self *BaseModel) GetSecondName(second int) (name string) {
+	o := orm.NewOrm()
+	s := Second{Id: second}
+	err := o.Read(&s)
+	if err == nil {
+		name = s.Secondname
+	}
+	return
 }

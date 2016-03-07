@@ -31,7 +31,8 @@ func (self *NovelSearchHandler) Handle(w http.ResponseWriter, r *http.Request, w
 	for _, doc := range searchresult.Docs {
 		docids = append(docids, int(doc.DocId))
 	}
-	res, err := models.NewBaseModel().GetNovels(docids)
+	picpath := web.Settings["NOVELPIC"]
+	res, err := models.NewBaseModel().GetNovels(docids, picpath)
 	if err != nil {
 		self.JsonResponse(w, "", 200)
 	} else {

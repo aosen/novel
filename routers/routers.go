@@ -25,5 +25,7 @@ func Register(web *utils.Web, r *mux.Router) {
 	r.HandleFunc("/novelcollect/", web.Go(&controllers.NovelCollectHandler{}))
 	r.HandleFunc("/novelsearch/", web.Go(&controllers.NovelSearchHandler{}))
 	r.HandleFunc("/novelrank/", web.Go(&controllers.RankHandler{}))
+	r.HandleFunc("/noveldownload/", web.Go(&controllers.DownloadHandler{}))
+	r.HandleFunc("/novelrecommend/", web.Go(&controllers.NovelRecommendHandler{}))
 	r.NotFoundHandler = http.HandlerFunc(web.Go(controllers.NewNotFoundHandler()))
 }

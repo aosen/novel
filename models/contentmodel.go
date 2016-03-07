@@ -15,7 +15,11 @@ next
 
 package models
 
-import "github.com/astaxie/beego/orm"
+import (
+	"log"
+
+	"github.com/astaxie/beego/orm"
+)
 
 type NovelContentModel struct {
 	BaseModel
@@ -30,6 +34,7 @@ func (self *NovelContentModel) GetContent(chapterid int) (map[string]interface{}
 	o := orm.NewOrm()
 	//获取小说内容
 	if err := o.QueryTable("content").Filter("id", chapterid).One(&content, "Id", "Novelid", "Title", "Subtitle", "Text"); err != nil {
+		log.Println("00000000000000000000")
 		return nil, err
 	}
 	//根据chapterid获取上一章节的chapterid和下一章节的chapterid
@@ -39,11 +44,11 @@ func (self *NovelContentModel) GetContent(chapterid int) (map[string]interface{}
 	)
 	//获取上一章id
 	if err := o.QueryTable("content").Filter("novelid", content.Novelid).Filter("id__lt", chapterid).OrderBy("-id").Limit(1).One(&pre, "Id"); err != nil {
-		return nil, err
+		pre.Id = 0
 	}
 	//获取下一章Id
 	if err := o.QueryTable("content").Filter("novelid", content.Novelid).Filter("id__gt", chapterid).OrderBy("id").Limit(1).One(&next, "Id"); err != nil {
-		return nil, err
+		next.Id = 0
 	}
 
 	//返回结果
