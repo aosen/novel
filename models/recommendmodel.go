@@ -15,14 +15,14 @@ func NewNovelRecommendModel() *NovelRecommendModel {
 	return &NovelRecommendModel{}
 }
 
-func (self *NovelRecommendModel) GetList(picpath string) ([]map[string]interface{}, error) {
+func (self *NovelRecommendModel) GetList(picpath string) (map[string]interface{}, error) {
 	var reclist []*Recommend
 	o := orm.NewOrm()
 	//获取推荐列表
 	if _, err := o.QueryTable("recommend").All(&reclist, "Id", "Tagid", "Novelid", "Top"); err != nil {
 		return nil, err
 	}
-	ret := []map[string]interface{}{}
+	ret := map[string]interface{}{}
 	for k, _ := range RecommendMap {
 		el := map[string]interface{}{}
 		novellist := []map[string]interface{}{}
@@ -45,12 +45,12 @@ func (self *NovelRecommendModel) GetList(picpath string) ([]map[string]interface
 			}
 		}
 		el["novellist"] = novellist[0:5]
-		ret = append(ret, el)
+		ret = el
 	}
 	return ret, nil
 }
 
-func (self *NovelRecommendModel) GetMore(tagid int, picpath string) ([]map[string]interface{}, error) {
+func (self *NovelRecommendModel) GetMore(tagid int, picpath string) (map[string]interface{}, error) {
 	var reclist []*Recommend
 	o := orm.NewOrm()
 	//获取推荐列表
@@ -59,7 +59,7 @@ func (self *NovelRecommendModel) GetMore(tagid int, picpath string) ([]map[strin
 	}
 	el := map[string]interface{}{}
 	novellist := []map[string]interface{}{}
-	ret := []map[string]interface{}{}
+	ret := map[string]interface{}{}
 	for _, n := range reclist {
 		el["tag"] = RecommendMap[n.Tagid]
 		el["tagid"] = n.Tagid
@@ -77,6 +77,6 @@ func (self *NovelRecommendModel) GetMore(tagid int, picpath string) ([]map[strin
 		}
 	}
 	el["novellist"] = novellist
-	ret = append(ret, el)
+	ret = el
 	return ret, nil
 }
