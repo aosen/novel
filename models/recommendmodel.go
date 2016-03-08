@@ -73,6 +73,7 @@ func (self *NovelRecommendModel) GetMore(tagid int, picpath string) (map[string]
 				"novelid":    novel["novelid"],
 				"intro":      novel["introduction"],
 				"picture":    picpath + novel["picture"].(string),
+				"author":     novel["author"],
 			})
 		}
 	}
