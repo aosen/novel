@@ -16,6 +16,7 @@ dep:fmt
 
 build:dep
 	go build -o bin/novel src/novel/main.go
+	mkdir static
 clean:
 	#rm -rfv pkg
 	rm -rf bin/novel
