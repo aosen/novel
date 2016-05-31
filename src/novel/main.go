@@ -11,9 +11,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"novel/routers"
-	"novel/tasks"
-	"novel/utils"
 
 	"github.com/aosen/goutils"
 	"github.com/aosen/search"
@@ -23,6 +20,9 @@ import (
 	"github.com/gorilla/mux"
 
 	_ "novel/models"
+	"novel/routers"
+	"novel/tasks"
+	"novel/utils"
 )
 
 func loadconf(path string) (settings map[string]string) {

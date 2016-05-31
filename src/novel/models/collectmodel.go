@@ -21,7 +21,7 @@ func NewNovelCollectModel() *NovelCollectModel {
 func (self *NovelCollectModel) PutCollect(novelid int) (map[string]interface{}, error) {
 	o := orm.NewOrm()
 	_, err := o.QueryTable("novel").Filter("id", novelid).Update(orm.Params{
-		"novelcollect": orm.ColValue(orm.Col_Add, 1),
+		"novelcollect": orm.ColValue(orm.ColAdd, 1),
 	})
 	if err != nil {
 		return nil, err

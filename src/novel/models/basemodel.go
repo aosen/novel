@@ -180,7 +180,7 @@ func init() {
 	if !ok {
 		log.Fatal("not found DBINFO in config file")
 	}
-	orm.RegisterDriver("mysql", orm.DR_MySQL)
+	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", dbinfo)
 	orm.RegisterModel(
 		new(First),

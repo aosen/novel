@@ -21,7 +21,7 @@ func NewNovelPVModel() *NovelPVModel {
 func (self *NovelPVModel) PutPV(novelid int) (map[string]interface{}, error) {
 	o := orm.NewOrm()
 	_, err := o.QueryTable("novel").Filter("id", novelid).Update(orm.Params{
-		"novelpv": orm.ColValue(orm.Col_Add, 1),
+		"novelpv": orm.ColValue(orm.ColAdd, 1),
 	})
 	if err != nil {
 		return nil, err

@@ -23,7 +23,7 @@ func (self *NovelRecommendModel) GetList(picpath string) ([]map[string]interface
 		return nil, err
 	}
 	ret := []map[string]interface{}{}
-	for k, _ := range RecommendMap {
+	for k := range RecommendMap {
 		el := map[string]interface{}{}
 		novellist := []map[string]interface{}{}
 		for _, n := range reclist {
